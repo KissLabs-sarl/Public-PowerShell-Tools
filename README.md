@@ -2,7 +2,7 @@
 
 [![PowerShell quality](https://github.com/KissLabs-sarl/Public-PowerShell-Tools/actions/workflows/powershell-quality.yml/badge.svg)](https://github.com/KissLabs-sarl/Public-PowerShell-Tools/actions/workflows/powershell-quality.yml)
 
-Scripts PowerShell d'administration Windows, par KissLabs.
+Scripts PowerShell d'administration Windows.
 
 Chaque push et pull request est contrôlé automatiquement : syntaxe, PSScriptAnalyzer, compatibilité
 Windows PowerShell 5.1 et validité de l'aide intégrée (`.github/workflows/powershell-quality.yml`).
