@@ -49,7 +49,7 @@ de code de sortie exploitable.
 https://raw.githubusercontent.com/KissLabs-sarl/Public-PowerShell-Tools/main/Check-Windows11Upgrade.ps1
 ```
 
-Pour figer une version en production, remplacer `main` par le tag de la release (par exemple `v1.2.0`).
+Pour figer une version en production, remplacer `main` par le tag de la release (par exemple `v1.2.1`).
 
 ### Utilisation
 
@@ -72,7 +72,7 @@ Pour figer une version en production, remplacer `main` par le tag de la release 
 | `-RecommendedFreeSpaceGB` | `30` | Espace libre recommandé sur le disque système (avertissement non bloquant). |
 | `-KeepTemp` | — | Conserve le dossier temporaire au lieu de le supprimer. |
 | `-HardwareScriptPath` | — | Copie locale de `HardwareReadiness.ps1` à utiliser au lieu du téléchargement. |
-| `-LogDirectory` | `%SystemRoot%\Logs\KissLabs` | Dossier du fichier journal. |
+| `-LogDirectory` | `%SystemRoot%\Logs\Check-Windows11Upgrade` | Dossier du fichier journal. |
 
 L'aide complète est disponible avec `Get-Help .\Check-Windows11Upgrade.ps1 -Full`.
 
@@ -95,7 +95,8 @@ cas d'`ERROR`.
 ### Journal
 
 Chaque exécution écrit un fichier dédié `Check-Windows11Upgrade_<POSTE>_<AAAAMMJJ-HHMMSS>_<PID>.log`
-dans `%SystemRoot%\Logs\KissLabs` (`C:\Windows\Logs\KissLabs`), ou dans `-LogDirectory`.
+dans `%SystemRoot%\Logs\Check-Windows11Upgrade` (`C:\Windows\Logs\Check-Windows11Upgrade`), ou dans
+`-LogDirectory`.
 
 - Chaque ligne de contrôle est horodatée et porte un niveau (`INFO`, `OK`, `WARN`, `FAIL`, `ERROR`).
 - Seuls SYSTEM et les administrateurs peuvent écrire dans le dossier par défaut : un utilisateur

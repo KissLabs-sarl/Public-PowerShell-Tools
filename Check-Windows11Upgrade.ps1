@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-    KissLabs - Windows 11 Upgrade Readiness Check
+    Windows 11 Upgrade Readiness Check
 
 .DESCRIPTION
     Vérifie si la machine est prête pour une mise à niveau vers Windows 11 25H2.
@@ -29,8 +29,8 @@
     afin de lire les bonnes clés de registre.
 
     Chaque exécution est journalisée (horodatage, niveau) dans un fichier
-    dédié, par défaut %SystemRoot%\Logs\KissLabs (écriture réservée à SYSTEM
-    et aux administrateurs).
+    dédié, par défaut %SystemRoot%\Logs\Check-Windows11Upgrade (écriture
+    réservée à SYSTEM et aux administrateurs).
 
 .PARAMETER RecommendedFreeSpaceGB
     Espace libre recommandé sur le disque système, en Go. En dessous, un
@@ -46,7 +46,7 @@
     https://aka.ms/HWReadinessScript. La signature est contrôlée dans les deux cas.
 
 .PARAMETER LogDirectory
-    Dossier du fichier journal. Défaut : %SystemRoot%\Logs\KissLabs.
+    Dossier du fichier journal. Défaut : %SystemRoot%\Logs\Check-Windows11Upgrade.
 
 .EXAMPLE
     .\Check-Windows11Upgrade.ps1
@@ -55,7 +55,7 @@
     .\Check-Windows11Upgrade.ps1 -HardwareScriptPath "\\serveur\partage\HardwareReadiness.ps1" -KeepTemp
 
 .NOTES
-    Version              : 1.2.0
+    Version              : 1.2.1
     Cible de déploiement : Windows 11 25H2 (build 26200)
     Compatible Windows PowerShell 5.1, droits administrateur requis.
 
@@ -79,7 +79,7 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-$ScriptVersion = "1.2.0"
+$ScriptVersion = "1.2.1"
 $TargetVersion = "25H2"
 $TargetBuild = 26200
 $TargetIndicatorKey = "GE25H2"
@@ -481,7 +481,7 @@ if ($Is32BitHostOn64BitOS) {
 
     # La variable d'environnement empêche une relance en boucle (ex. Windows
     # ARM64 dont le PowerShell natif ne serait pas 64 bits).
-    if ((-not [string]::IsNullOrEmpty($PSCommandPath)) -and (Test-Path $SysNativePowerShell) -and ($env:KISSLABS_W11CHECK_RELAUNCHED -ne "1")) {
+    if ((-not [string]::IsNullOrEmpty($PSCommandPath)) -and (Test-Path $SysNativePowerShell) -and ($env:W11UPGRADECHECK_RELAUNCHED -ne "1")) {
         $RelaunchArguments = @(
             "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
             "-File", $PSCommandPath,
@@ -506,7 +506,7 @@ if ($Is32BitHostOn64BitOS) {
 
         # La sortie d'erreur du processus enfant ne doit pas interrompre le relais.
         $ErrorActionPreference = "Continue"
-        $env:KISSLABS_W11CHECK_RELAUNCHED = "1"
+        $env:W11UPGRADECHECK_RELAUNCHED = "1"
         $RelaunchCompleted = $false
 
         try {
@@ -520,7 +520,7 @@ if ($Is32BitHostOn64BitOS) {
         finally {
             # Le marqueur ne vaut que pour le processus relancé : une nouvelle
             # exécution dans le même hôte 32 bits doit pouvoir relancer.
-            Remove-Item -Path "Env:\KISSLABS_W11CHECK_RELAUNCHED" -ErrorAction SilentlyContinue
+            Remove-Item -Path "Env:\W11UPGRADECHECK_RELAUNCHED" -ErrorAction SilentlyContinue
         }
 
         if ($RelaunchCompleted) {
@@ -561,7 +561,7 @@ try {
     # Défaut sous %SystemRoot%\Logs : un utilisateur standard ne peut pas y
     # créer de dossier à l'avance (contrairement à %ProgramData%).
     if ([string]::IsNullOrWhiteSpace($LogDirectory)) {
-        $LogDirectory = Join-Path $env:SystemRoot "Logs\KissLabs"
+        $LogDirectory = Join-Path $env:SystemRoot "Logs\Check-Windows11Upgrade"
     }
 
     if (-not (Test-Path -LiteralPath $LogDirectory -PathType Container)) {
